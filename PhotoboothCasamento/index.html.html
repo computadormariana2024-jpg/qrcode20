@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photobooth Casamento</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    background: #ffe6f0;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  h1 {
+    margin-top: 20px;
+    color: #d6336c;
+  }
+  video, canvas {
+    margin-top: 20px;
+    border-radius: 12px;
+    max-width: 90%;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  }
+  button {
+    margin-top: 20px;
+    padding: 15px 25px;
+    font-size: 18px;
+    background-color: #d6336c;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  button:hover {
+    background-color: #a71d4a;
+  }
+</style>
+</head>
+<body>
+<h1>Photobooth do Casamento 💖</h1>
+
+<video id="video" autoplay></video>
+<canvas id="canvas" style="display:none;"></canvas>
+<br>
+<button id="capture">Tirar Foto 📸</button>
+
+<script>
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const captureBtn = document.getElementById('capture');
+
+// Pedir acesso à câmara
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => {
+  video.srcObject = stream;
+})
+.catch(err => alert('Erro ao aceder à câmara: ' + err));
+
+// Função para capturar a foto
+captureBtn.addEventListener('click', () => {
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const context = canvas.getContext('2d');
+  context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  // Criar link para download
+  const link = document.createElement('a');
+  link.href = canvas.toDataURL('image/png');
+  link.download = `foto-casamento-${Date.now()}.png`;
+  link.click();
+});
+</script>
+</body>
+</html>
